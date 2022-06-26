@@ -1,7 +1,7 @@
 # HomeCredit
-Config files for my GitHub profile.
 
-"Credit Scoring" project based on Home Credit dataset, available @ Kaggle: https://www.kaggle.com/c/home-credit-default-risk/data
+"Credit Scoring" project based on Home Credit dataset, available @ Kaggle: https://www.kaggle.com/c/home-credit-default-risk/data. OpenClassrooms project P7.
+
 Realized in Python, based on MLFlow (model API), Flask (other web API), Dash (Dashboard)
 
 "API" folder:
