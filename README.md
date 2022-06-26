@@ -5,12 +5,12 @@
 Realized in Python, based on MLFlow (model API), Flask (other web API), Dash (Dashboard)
 
 "API" folder:
-from P07_01_* to P07_03_* : data exploration, feature engineering, modelisation tuning, measure
-P07_04_* : Creation of MLFlow model and API
-P07_05_* : Web APIs, Flask (all data for Dashboard delivered through those APIS, including model score).
+ - from P07_01_* to P07_03_* : data exploration, feature engineering, modelisation tuning, measure.
+ - P07_04_* : Creation of MLFlow model and API.
+ - P07_05_* : Web APIs, Flask (all data for Dashboard delivered through those APIS, including model score).
 
 "Dashboard" folder:
-P7_06_Dashboard.py : HTML Dashboard, Dash
+ - P7_06_Dashboard.py : HTML Dashboard, Dash
 
 System architecture and workflow:
 
