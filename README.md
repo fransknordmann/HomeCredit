@@ -3,7 +3,7 @@
 "Credit Scoring" project based on Home Credit dataset, available @ Kaggle: https://www.kaggle.com/c/home-credit-default-risk/data. OpenClassrooms project P7.
 
 Realized in Python, based on MLFlow (model API), Flask (other web API), Dash (Dashboard)
-
+ 
 "API" folder:
  - from P07_01_* to P07_03_* : data exploration, feature engineering, modelisation tuning, measure.
  - P07_04_* : Creation of MLFlow model and API.
