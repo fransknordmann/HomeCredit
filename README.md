@@ -40,16 +40,19 @@ Model generation, MLFlow server, Web API and Dashboard hosted on AWS, EC2 free i
 Due to limitation of a free instance the model behind the dashboard is limited to 15000 loans (among the original >300K loans)
 
 Modelisation:
+
 P7__03_Classification.ipynb :
  - measure of different model performances, keep GradientBoost.
  - Measure based on Roc Area Under the Curve.
  - Search for False positives and False negative rates (Kfold, ROC)
  - Feature importance (Kfold and feature permutations)
  - register data set removing features with weight = 0 (reduced dataset)
+
 P7__03_Classification_Reduced.ipynb
  - measure performance with reduced dataset
  - check that results are identical as with complete dataset
  - confirm model parameters
+
 P7_04_Classification_MLFlow_creation.ipynb
  - create a sklearn pipeline with model parameters
  - generate MLFlow model credithome_model from pipeline
