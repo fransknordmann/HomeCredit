@@ -3,7 +3,7 @@
 # 
 # API Web
 # Run this api with `python myfile.py` and
-# call http://localhost:5001/api/client_list/ from web page or app.
+# e.g. call http://localhost:5001/api/client_list/ from web page or app.
 # to log info : app.logger.info('my message')
 
 # Import standard librairies
@@ -87,8 +87,8 @@ data_cli['DESC'] = data_cli['SK_ID_CURR'] + ' - ' +\
                    data_cli['AMT_CREDIT']
 
 # prepare data for client_score
-#model_url = 'http://localhost:5000/invocations'
-model_url = 'http://oc.14eight.com:5000/invocations'
+model_url = 'http://localhost:5000/invocations'
+#model_url = 'http://oc.14eight.com:5000/invocations'
 headers = {"Content-Type": "application/json"}
 c_features = [c for c in df.columns \
               if c not in ['index', 'TARGET', 'SK_ID_CURR']]
@@ -116,7 +116,7 @@ def client_list():
           DAYS_BIRTH converted to strings with feature description 
     
     """
-    data = data_cli.iloc[122:143,:]['DESC'].values.tolist()
+    data = data_cli.iloc[135:160,:]['DESC'].values.tolist()
 
     return jsonify({
         'status': 'ok', 

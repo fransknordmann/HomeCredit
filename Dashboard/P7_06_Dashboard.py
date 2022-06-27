@@ -25,7 +25,7 @@ def trace_txt(message):
 #------------------------------------------------------------------------------
 
 # API Web
-api_url = 'http://oc.14eight.com:5001/api//'
+api_url = 'http://oc.14eight.com:5001/api/'
 headers = {'Content-Type': 'application/json'}
 
 def prediction(id):
@@ -145,9 +145,12 @@ def map_values_to_0_1(df_feat_val, tab_f):
             lv = 0-lv
             mp = 0-mp
             mn = 0-mn
-        lv = lv / max_feat
-        mp = mp / max_feat
-        mn = mn / max_feat
+        if max_feat==0:
+            lv = mp = mn = 0
+        else:
+            lv = lv / max_feat
+            mp = mp / max_feat
+            mn = mn / max_feat
         y1.append(mp)
         y2.append(lv)
         y3.append(mn)
