@@ -1,6 +1,8 @@
 # HomeCredit
 
-"Credit Scoring" project based on Home Credit dataset, available @ Kaggle: https://www.kaggle.com/c/home-credit-default-risk/data. OpenClassrooms project P7.
+"Credit Scoring" project based on Home Credit dataset, available @ Kaggle: https://www.kaggle.com/c/home-credit-default-risk/data.
+
+OpenClassrooms project P7. Laurent Trichet
 
 Realized in Python, based on MLFlow (model API), Flask (other web API), Dash (Dashboard)
  
@@ -34,9 +36,12 @@ System architecture and workflow:
           
           
 Dashboard available at http://oc.14eight.com:8050
+
 Hosting:
+
 Please note there is no HTTPS certificate, please confirm safety of the access to your browser to view the dashboard anyway.
 Model generation, MLFlow server, Web API and Dashboard hosted on AWS, EC2 free instance.
+
 Due to limitation of a free instance the model behind the dashboard is limited to 15000 loans (among the original >300K loans)
 
 Modelisation:
