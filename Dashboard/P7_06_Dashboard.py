@@ -1,3 +1,8 @@
+# Data Scientist - P7 - Laurent Trichet
+# Implémentez un modèle de scoring
+# 
+# Dashboard
+#
 from dash import Dash, dcc, html, Input, Output, dash_table
 import dash._callback_context as ctx
 import plotly.graph_objects as go
@@ -24,6 +29,7 @@ api_url = 'http://oc.14eight.com:5001/api//'
 headers = {'Content-Type': 'application/json'}
 
 def prediction(id):
+    # call API to obtain score of selected item
     api_test = 'client_score/'
     data_json = {'SK_ID_CURR': id}
     response = requests.request(method='POST', headers=headers,
@@ -37,6 +43,7 @@ def prediction(id):
         return data_json['score'][0]
 
 def feature_values(id, filter, data_filter):
+    # call API to obtain values of selected item for main features
     api_test = 'feature_values/'
     data_json = {
         'SK_ID_CURR': id,
@@ -56,6 +63,7 @@ def feature_values(id, filter, data_filter):
         return pop, data
 
 def f_list(name_list):
+    # generifc call API to obtain different lists
     api_test = name_list
     data_json = {}
     response = requests.request(method='POST', headers=headers,
@@ -69,7 +77,7 @@ def f_list(name_list):
         return data_json['data']
 
 def list_match_slider(inlist):
-    # Maintain number of marks <= 7, for slider visual lisibility
+    # Maintain number of marks <= 7 in slider for visual improvt.
     outlist = []
     for i in np.arange(len(inlist)):
         if inlist[i][0] in [0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6]:
@@ -77,6 +85,7 @@ def list_match_slider(inlist):
     return outlist
 
 def calc_slider_marks(falserate_list, minlab, maxlab):
+    # position marker in slider according to proba of thresholds
     slider_marks = {0:minlab}
     for i in np.arange(0, len(falserate_list)):
         percent = f'{int(100*falserate_list[i][0])}'
@@ -86,6 +95,7 @@ def calc_slider_marks(falserate_list, minlab, maxlab):
     return slider_marks
 
 def update_slider_marks(score, slider_marks, falserate_list):
+    # insert mark for score into slider
     i=0
     while i < len(falserate_list):
         if score > falserate_list[i][1]:
@@ -104,6 +114,7 @@ def update_slider_marks(score, slider_marks, falserate_list):
     return falserate_thr, left_risk_mark, right_risk_mark, slider_marks
 
 def calc_gauge_steps(falserate_list, colors_ranges):
+    # calc gauge steps (colors) according to threshold proba
     steps_gauge = [{'range': [falserate_list[0][1], 1],
                         'color': colors_ranges[0]}]
     for i in np.arange(0, len(falserate_list)-1):
@@ -516,12 +527,11 @@ app.layout = html.Div([
     Input('client-dropdown', 'value')
 )
 def update_client_dropdown(f0,f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,client):
-    # search new score and feature values for selected loan
-#        filt_val = ctx.callback_context.inputs['filter-5-dropdown.value']
-#        SK_ID_CURR = ctx.callback_context.inputs['client-dropdown.value'][0:6]
 
+    # collect parameters from callback context (multi Input fields)
+    
     SK_ID_CURR = ctx.callback_context.inputs['client-dropdown.value'][0:6]
-
+    # Search for description of selected filters in tab_filter
     filter_list = []
     for i_feat in np.arange(0, len(tab_filters)):
         choice_feat = ctx.callback_context.inputs[
@@ -534,6 +544,7 @@ def update_client_dropdown(f0,f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,client):
         min_max = [tbf.iloc[rank,:]['min'], tbf.iloc[rank,:]['max']]
         filter_list.append(min_max)
 
+    # call APIs to get score and feature values
     score = round(100*prediction(SK_ID_CURR))/100
     population, feat_values = feature_values(SK_ID_CURR, 'Y', filter_list)
     lb_feat_values = f'{label_feature_values}{population[0]} positive loans and {population[1]} negative loans'
@@ -608,6 +619,7 @@ def update_client_dropdown(f0,f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,client):
                 }
             ))
 
+    # recommendation of Credit Home according to score
     reco_label, reco_image  = get_recommendation(score)
 
     return\

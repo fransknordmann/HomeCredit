@@ -1,3 +1,7 @@
+# Data Scientist - P7 - Laurent Trichet
+# Implémentez un modèle de scoring
+# 
+# API Web
 # Run this api with `python myfile.py` and
 # call http://localhost:5001/api/client_list/ from web page or app.
 # to log info : app.logger.info('my message')
