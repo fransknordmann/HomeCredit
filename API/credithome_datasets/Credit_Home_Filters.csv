@@ -9,11 +9,6 @@ EXT_SOURCE_2	1	0.0	0.25	EXT_SOURCE_2. Score from 0 to 0,25
 EXT_SOURCE_2	2	0.25	0.5	EXT_SOURCE_2. Score from 0,25 to 0,5
 EXT_SOURCE_2	3	0.5	0.75	EXT_SOURCE_2. Score from 0,5 to 0,75
 EXT_SOURCE_2	4	0.75	1	EXT_SOURCE_2. Score de 0,75 to 1
-AMT_ANNUITY	0	0.0	999999	All values
-AMT_ANNUITY	1	0.0	75000	Annuity from $0 to $75,000
-AMT_ANNUITY	2	75001	150000	Annuity from $75,000 to $150,000
-AMT_ANNUITY	3	150001	225000	Annuity from $15,000 to $225,000
-AMT_ANNUITY	4	225000	999999	Annuity > $225,000
 EXT_SOURCE_1	0	0.0	1	All values
 EXT_SOURCE_1	1	0.0	0.25	EXT_SOURCE_1. Score from 0 to 0,25
 EXT_SOURCE_1	2	0.25	0.5	EXT_SOURCE_1. Score from 0,25 to 0,5
@@ -25,6 +20,11 @@ DAYS_BIRTH	2	-39.0	-30.0	From 30 to 39 years old
 DAYS_BIRTH	3	-49.0	-40.0	From 40 to 49 years old
 DAYS_BIRTH	4	-59.0	-50.0	From 50 to 59 years old
 DAYS_BIRTH	5	-99.0	-60.0	More than 60 years old
+AMT_ANNUITY	0	0.0	999999	All values
+AMT_ANNUITY	1	0.0	75000	Annuity from $0 to $75,000
+AMT_ANNUITY	2	75001	150000	Annuity from $75,000 to $150,000
+AMT_ANNUITY	3	150001	225000	Annuity from $15,000 to $225,000
+AMT_ANNUITY	4	225000	999999	Annuity > $225,000
 CODE_GENDER	0	0	1	Women and Men
 CODE_GENDER	1	0	0	Women
 CODE_GENDER	2	1.	1	Men
@@ -37,10 +37,10 @@ BURO_DAYS_CREDIT_MAX	0	-2922	0	All values
 BURO_DAYS_CREDIT_MAX	1	-2922	-2000	Buro Credit. More than 2000 days (6 years)
 BURO_DAYS_CREDIT_MAX	2	-1999	-1000	Buro Credit. Between 2000 & 1000 days (6 to 3 years)
 BURO_DAYS_CREDIT_MAX	3	-999	0	Buro Credit. Less than 1000 days (3 years)
-INSTAL_DAYS_ENTRY_PAYMENT_MAX	0	-2922	0 	All values
-INSTAL_DAYS_ENTRY_PAYMENT_MAX	1	-2922	-2000 	Entry payt. More than 2000 days (6 years)
-INSTAL_DAYS_ENTRY_PAYMENT_MAX	2	-1999	-1000	entry Payt. Between 2000 & 1000 days (6 to 3 years)
-INSTAL_DAYS_ENTRY_PAYMENT_MAX	3	-999	0	Entry Payt. Less than 1000 days (3 years)
+BURO_DAYS_CREDIT_UPDATE_MEAN	0	-2922	0	All values
+BURO_DAYS_CREDIT_UPDATE_MEAN	1	-2922	-2000	Buro Credit. More than 2000 days (6 years)
+BURO_DAYS_CREDIT_UPDATE_MEAN	2	-1999	-1000	Buro Credit. Between 2000 & 1000 days (6 to 3 years)
+BURO_DAYS_CREDIT_UPDATE_MEAN	3	-999	0	Buro Credit. Less than 1000 days (3 years)
 DAYS_ID_PUBLISH	0	-7500	0 	All values
 DAYS_ID_PUBLISH	1	-7500	-5000 	Days Publish. More than 5000 days (13 years)
 DAYS_ID_PUBLISH	2	-4999	-3000	Days Publish. Between 5000 & 3000 days (13 to 8 years)
