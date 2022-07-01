@@ -43,6 +43,7 @@ FILEFILT_IN = DIRDATASET+'Credit_Home_Filters.csv'
 
 # load data training and data test
 df = pd.read_csv(FILESTD_FNAN0_REDUCED, sep='\t')
+
 # SHAP preparation
 df_train = df[df['TARGET']!=999]
 df_test1 = df[df['TARGET']==999]
@@ -129,15 +130,6 @@ data_cli['DESC'] = data_cli['SK_ID_CURR'] + ' - ' +\
                    data_cli['AMT_CREDIT'] + ' - Income total: ' +\
                    data_cli['AMT_INCOME_TOTAL']
 
-# prepare waterfall images
-for i in np.arange(0, MAX_LOAN):
-    name_file = f'../Dashboard/assets/water_fall_{data_cli.iloc[i,:]["SK_ID_CURR"]}.png'
-    fig, ax = plt.subplots()
-    shap.waterfall_plot(shap_values[i], max_display=30, show=False)
-    ax.set_title(f'Contribution of features on the score of {data_cli.iloc[i,:]["SK_ID_CURR"]}')
-    plt.savefig(name_file, bbox_inches='tight')
-    plt.close(fig)
-
 
 # prepare data for client_score
 model_url = 'http://localhost:5000/invocations'
@@ -181,7 +173,8 @@ def client_list():
 @app.route("/api/client_score/", methods=['POST'])
 def client_score():
     """
-    Return score =  probability to be positive. 
+    Return score =  probability to be positive.
+    Generate waterfall shap image
     
     Parameters
     ----------
@@ -193,10 +186,23 @@ def client_score():
     score: value between 0.0 and 1.0 
     
     """
+
+
     content_type = request.headers.get('Content-Type')
     if (content_type == 'application/json'):
         json = request.json
         id_client = json['SK_ID_CURR']
+
+        # prepare waterfall images
+        i = data_cli[data_cli['SK_ID_CURR']==id_client].index.values[0]
+        name_file = f'../Dashboard/assets/water_fall_{id_client}.png'
+        fig, ax = plt.subplots()
+        shap.waterfall_plot(shap_values[i], max_display=30, show=False)
+        ax.set_title(f'Contribution of features on the score of {id_client}')
+        plt.savefig(name_file, bbox_inches='tight')
+        plt.close(fig)
+
+        # retrieve features value of client, call model API for probability
         data_client = df_test[df_test['SK_ID_CURR']==int(id_client)]\
                      [c_features].iloc[0,:].to_list()
         data_json = {'data': [data_client]}

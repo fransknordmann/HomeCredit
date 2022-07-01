@@ -9,7 +9,7 @@ Realized in Python, based on MLFlow (model API), Flask (other web API), Dash (Da
 "API" folder:
  - from P07_01_* to P07_03_* : data exploration, feature engineering, modelisation tuning, measure.
  - P07_04_* : Creation of MLFlow model and API.
- - P07_05_* : Web APIs, Flask (all data for Dashboard delivered through those APIS, including model score).
+ - P07_05_* : Web APIs, Flask (all data for Dashboard delivered through those API, including model score, SHAP image generation).
 
 "Dashboard" folder:
  - P7_06_Dashboard.py : HTML Dashboard, Dash
@@ -57,6 +57,9 @@ P7__03_Classification_Reduced.ipynb
  - measure performance with reduced dataset
  - check that results are identical as with complete dataset
  - confirm model parameters
+
+P7__03_Classification_SHAP.ipynb
+ - use SHAP to evaluate global and local features impacts
 
 P7_04_Classification_MLFlow_creation.ipynb
  - create a sklearn pipeline with model parameters

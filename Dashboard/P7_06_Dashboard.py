@@ -25,7 +25,8 @@ def trace_txt(message):
 #------------------------------------------------------------------------------
 
 # API Web
-api_url = 'http://localhost:5001/api/'
+api_url = 'http://oc.14eight.com:5001/api/'
+#api_url = 'http://localhost:5001/api/'
 headers = {'Content-Type': 'application/json'}
 
 def prediction(id):
@@ -158,12 +159,12 @@ def map_values_to_0_1(df_feat_val, tab_f):
 
 def get_recommendation(score):
     label_recommendation = [
-'Credit Home recommends to reject this loan, the risk of unpayment is too high.\
+'Credit Home recommends attention with this loan, the risk of unpayment is high.\
+ Feature importance and values below should help you explain the score.',
+'Credit Home recommends to control the profil of the request before taking a decision.\
  Feature importance and values below can help clarify the score.',
-'Credit Home recommends that you discuss the decision with your hierarchy.\
- Feature importance and values below can help clarify the score.',
-'Credit Home recommends to accept this loan, the risk is low.\
- Feature importance and values below can help clarify the score.']
+'Credit Home recommends to accept this loan, the risk of unpayment is low.\
+ Feature importance and values below should help you explain the score.']
     if score > 0.72:
         return label_recommendation[2], 'traffic_light_green.png'
     else:
@@ -195,7 +196,7 @@ label_turnover_beg = 'The probability to refuse a loan that would have been repa
 label_turnover_end = '% (False negative)'
 label_gauge_turnover = 'Score & potential loss of earnings'
 label_ranges_turnover = 'False Negative Ranges:'
-label_feature_importance = 'Features Importance'
+label_feature_importance = 'Features Importance (global, same list for all loans)'
 label_feature_values = 'Values for this loan compared to the values of past contracts, '
 
 font_size_title = '20px'
@@ -492,12 +493,15 @@ app.layout = html.Div([
                 dcc.Graph(id='feature-graphic'
                 ),
             ], style={'width': '100%', 'textAlign': 'left'}),
+            html.Img(src=app.get_asset_url('cyan_line.png'),
+                width='100%', height='2px'
+            ),
             html.Div(children=[    # Waterfall feature impact on score
                 html.Img(id='image-waterfall',
                     src=app.get_asset_url('traffic_light_orange.png'),
                     width='800px', height='1000px'
                 ),
-            ], style={'padding': 25, 'width': '90%', 'textAlign': 'center'}),
+            ], style={'padding': 30, 'width': '100%', 'textAlign': 'center'}),
         ], style={'padding': 5, 'display': 'inline-block', 'width': '85%' })
     ], style={'backgroundColor':'#FFFFFF'}),
 
