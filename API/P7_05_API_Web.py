@@ -14,6 +14,14 @@ import requests
 
 # Import Garbage Collector (empty dataFrame memory)
 import gc
+# Import Imbalanced-learn necessary tools
+import imblearn
+# import for classification GradientBoostingClassifier
+from sklearn import ensemble
+# Import shap
+import shap
+import matplotlib.pyplot as plt
+
 
 app = Flask(__name__)
 
@@ -23,6 +31,7 @@ app = Flask(__name__)
 #------------------------------------------------------------------------------
 
 # Constants
+MAX_LOAN = 50
 DIRDATASET = './credithome_datasets/'
 NUMROWS = 15000       # 1000000 = total dataset
 FILESTD_FNAN0_REDUCED =\
@@ -34,6 +43,36 @@ FILEFILT_IN = DIRDATASET+'Credit_Home_Filters.csv'
 
 # load data training and data test
 df = pd.read_csv(FILESTD_FNAN0_REDUCED, sep='\t')
+# SHAP preparation
+df_train = df[df['TARGET']!=999]
+df_test1 = df[df['TARGET']==999]
+# Keep valid columns for features and result class in future classifications
+c_features = [c for c in df.columns if c not in ['index', 'TARGET', 'SK_ID_CURR']]
+c_class = 'TARGET'
+# Imbalanced classes
+undersample = imblearn.under_sampling.RandomUnderSampler(random_state=0)
+X, y = undersample.fit_resample(df_train[c_features+[c_class]], df_train[c_class])
+# Keep features columns only
+X = X[c_features]
+X_test = df_test1[c_features]
+del df_train, df_test1
+gc.collect()
+gbc = ensemble.GradientBoostingClassifier(
+                n_estimators=200, max_depth=3,
+                criterion='friedman_mse',
+                min_samples_split = 4,
+                min_weight_fraction_leaf = 0.2
+                )
+gbc.fit(X, y)
+explainer = shap.TreeExplainer(gbc)
+base_values = X_test
+shap_values = explainer.shap_values(base_values)
+shap_expected = explainer.expected_value
+shap_interaction = explainer.shap_interaction_values(base_values)
+shap_values = explainer(base_values)
+
+
+
 s = df.select_dtypes(include='int').columns
 df[s] = df[s].astype("float")
 
@@ -49,7 +88,7 @@ df_feat = df_feat.iloc[0:12,:]
 df_filter = pd.read_csv(FILEFILT_IN, sep='\t')
 
 # list of features
-key_features = ['SK_ID_CURR', 'CODE_GENDER', 'AMT_CREDIT', 'DAYS_BIRTH']
+key_features = ['SK_ID_CURR', 'CODE_GENDER', 'AMT_CREDIT', 'DAYS_BIRTH', 'AMT_INCOME_TOTAL']
 main_features = df_feat['col name'].values.tolist()
 
 def map_sk_id_curr(c):
@@ -57,11 +96,11 @@ def map_sk_id_curr(c):
 
 def map_code_gender(c):
     if c==1:
-        return "Man"
-    else:
         return "Woman"
+    else:
+        return "Man"
 
-def map_amt_credit(c):
+def map_amount(c):
     return 'USD $'+str(c)
 
 def map_days_birth(c):
@@ -76,7 +115,10 @@ data_cli['CODE_GENDER'] = data_cli['CODE_GENDER'].astype('object')
 data_cli['CODE_GENDER'] = data_cli['CODE_GENDER'].map(map_code_gender)
 data_cli['AMT_CREDIT'] = data_cli['AMT_CREDIT'].astype('int')
 data_cli['AMT_CREDIT'] = data_cli['AMT_CREDIT'].astype('object')
-data_cli['AMT_CREDIT'] = data_cli['AMT_CREDIT'].map(map_amt_credit)
+data_cli['AMT_CREDIT'] = data_cli['AMT_CREDIT'].map(map_amount)
+data_cli['AMT_INCOME_TOTAL'] = data_cli['AMT_INCOME_TOTAL'].astype('int')
+data_cli['AMT_INCOME_TOTAL'] = data_cli['AMT_INCOME_TOTAL'].astype('object')
+data_cli['AMT_INCOME_TOTAL'] = data_cli['AMT_INCOME_TOTAL'].map(map_amount)
 data_cli['DAYS_BIRTH'] = -data_cli['DAYS_BIRTH']
 data_cli['DAYS_BIRTH'] = data_cli['DAYS_BIRTH'].astype('int')
 data_cli['DAYS_BIRTH'] = data_cli['DAYS_BIRTH'].astype('object')
@@ -84,7 +126,18 @@ data_cli['DAYS_BIRTH'] = data_cli['DAYS_BIRTH'].map(map_days_birth)
 data_cli['DESC'] = data_cli['SK_ID_CURR'] + ' - ' +\
                    data_cli['CODE_GENDER'] + ' - ' +\
                    data_cli['DAYS_BIRTH'] + ' - Amount Loan: ' +\
-                   data_cli['AMT_CREDIT']
+                   data_cli['AMT_CREDIT'] + ' - Income total: ' +\
+                   data_cli['AMT_INCOME_TOTAL']
+
+# prepare waterfall images
+for i in np.arange(0, MAX_LOAN):
+    name_file = f'../Dashboard/assets/water_fall_{data_cli.iloc[i,:]["SK_ID_CURR"]}.png'
+    fig, ax = plt.subplots()
+    shap.waterfall_plot(shap_values[i], max_display=30, show=False)
+    ax.set_title(f'Contribution of features on the score of {data_cli.iloc[i,:]["SK_ID_CURR"]}')
+    plt.savefig(name_file, bbox_inches='tight')
+    plt.close(fig)
+
 
 # prepare data for client_score
 model_url = 'http://localhost:5000/invocations'
@@ -102,7 +155,8 @@ df_test = df[df['TARGET']==999]
 @app.route("/api/client_list/", methods=['POST'])
 def client_list():
     """
-    Return complete list of clients (loans) for the dataset test. 
+    Return complete list of clients (loans) for the dataset test.
+    LIMITED TO 50 FIRST LOANS FOR PROJECT P7 
     
     Parameters
     ----------
@@ -116,7 +170,7 @@ def client_list():
           DAYS_BIRTH converted to strings with feature description 
     
     """
-    data = data_cli.iloc[135:160,:]['DESC'].values.tolist()
+    data = data_cli.iloc[0:MAX_LOAN,:]['DESC'].values.tolist()
 
     return jsonify({
         'status': 'ok', 

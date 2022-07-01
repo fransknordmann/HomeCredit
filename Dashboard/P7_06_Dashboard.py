@@ -25,7 +25,7 @@ def trace_txt(message):
 #------------------------------------------------------------------------------
 
 # API Web
-api_url = 'http://oc.14eight.com:5001/api/'
+api_url = 'http://localhost:5001/api/'
 headers = {'Content-Type': 'application/json'}
 
 def prediction(id):
@@ -284,7 +284,7 @@ app.layout = html.Div([
                         'margin-left': '4px','font-family': 'Arial',
                         'font-size': font_size_loan_dropdown}
                 ),
-            ], style={'display': 'inline-block', 'width': '65%', 'text-align':'left', 'verticalAlign':'middle'}),
+            ], style={'display': 'inline-block', 'width': '75%', 'text-align':'left', 'verticalAlign':'middle'}),
             html.Img(src=app.get_asset_url('cyan_line.png'),
                 width='100%', height='2px'
             ),
@@ -455,7 +455,7 @@ app.layout = html.Div([
                         },
                         {'if': {'column_id': 'mean negative'},
                             'fontWeight': 'bold',
-                            'color': 'orange'
+                            'color': 'red'
                         },
                         {'if': {'column_id': 'max neg.'},
                             'color': '#999999',
@@ -492,6 +492,12 @@ app.layout = html.Div([
                 dcc.Graph(id='feature-graphic'
                 ),
             ], style={'width': '100%', 'textAlign': 'left'}),
+            html.Div(children=[    # Waterfall feature impact on score
+                html.Img(id='image-waterfall',
+                    src=app.get_asset_url('traffic_light_orange.png'),
+                    width='800px', height='1000px'
+                ),
+            ], style={'padding': 25, 'width': '90%', 'textAlign': 'center'}),
         ], style={'padding': 5, 'display': 'inline-block', 'width': '85%' })
     ], style={'backgroundColor':'#FFFFFF'}),
 
@@ -502,6 +508,7 @@ app.layout = html.Div([
 #------------------------------------------------------------------------------
 
 @app.callback(
+    Output('image-waterfall', 'src'),
     Output('feature-graphic', 'figure'),
     Output('label-feature-values', 'children'),
     Output('feature-values', 'data'),
@@ -534,6 +541,10 @@ def update_client_dropdown(f0,f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,client):
     # collect parameters from callback context (multi Input fields)
     
     SK_ID_CURR = ctx.callback_context.inputs['client-dropdown.value'][0:6]
+
+    # file name for waterfall graphic
+    water_f = f'water_fall_{SK_ID_CURR}.png'
+
     # Search for description of selected filters in tab_filter
     filter_list = []
     for i_feat in np.arange(0, len(tab_filters)):
@@ -564,7 +575,7 @@ def update_client_dropdown(f0,f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,client):
                 x = df_feat_values['Feature'].values,
                 y = y1,
                 mode = 'lines+markers',
-                line=dict(color='lightgreen', width=2),
+                line=dict(color='green', width=2),
                 name = 'mean of positive loans',
     ))
     fig_feat.add_trace(go.Scatter(
@@ -578,7 +589,7 @@ def update_client_dropdown(f0,f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,client):
                 x =  df_feat_values['Feature'].values,
                 y =  y3,
                 mode = 'lines+markers',
-                line=dict(color='lightsalmon', width=2),
+                line=dict(color='red', width=2),
                 name = 'mean of negative loans',
     ))
     fig_feat.update_layout(plot_bgcolor='white')
@@ -626,6 +637,7 @@ def update_client_dropdown(f0,f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,client):
     reco_label, reco_image  = get_recommendation(score)
 
     return\
+        app.get_asset_url(water_f),\
         fig_feat,\
         lb_feat_values,\
         df_feat_values.to_dict('records'),\

@@ -6,8 +6,8 @@ flavors:
     python_model: python_model.pkl
     python_version: 3.8.8
 mlflow_version: 1.26.1
-model_uuid: c8b8ad09cbec43a2a5816dbf71c383c9
+model_uuid: 4965dbe5be644793966a8bdc7325c565
 signature:
-  inputs: '[{"type": "tensor", "tensor-spec": {"dtype": "float64", "shape": [-1, 225]}}]'
+  inputs: '[{"type": "tensor", "tensor-spec": {"dtype": "float64", "shape": [-1, 213]}}]'
   outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "float64", "shape": [-1]}}]'
-utc_time_created: '2022-06-20 07:58:39.251667'
+utc_time_created: '2022-06-30 19:53:11.121586'
